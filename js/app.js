@@ -39,17 +39,19 @@ function update() {
         titleObj = JSON.parse(title);
         notesObj = JSON.parse(notes);
     }
-    
+
     let html = "";
     notesObj.forEach(function (element, index) {
         html += `<div class="mx-2 my-2 noteCards card" style="width: 18rem;">
         <div class="card-body">
-        <h5 class="card-title">Note ${index + 1}</h5>
-        <h5 class="card-title note-title${index}"></h5>
+        <h5 class="card-title" style="color: #a2cfa2;">Note ${index + 1}</h5>
+        <h5 class="card-titlee">${titleObj[index]}</h5>
         <p class="card-text">${element}</p>
         <button id="${index}" onclick="deleteNotes(this.id)" class="btn btn-primary">Delete Note</button>
         </div>
         </div>`;
+
+        console.log(titleObj[index])
     });
 
     let noteElm = document.getElementById('notes');
@@ -59,11 +61,6 @@ function update() {
     else {
         noteElm.innerHTML = `There is nothing to show Please Add some Notes`
     }
-
-    titleObj.forEach(function (element, index) {
-        let noteTitle = document.getElementsByClassName(`note-title${index}`);
-        noteTitle[0].innerText = element;
-    });
 }
 
 // Function to Delete the Particular Notes
@@ -89,7 +86,7 @@ function deleteNotes(index) {
 let deleteAll = document.getElementById('dltAll');
 deleteAll.addEventListener('click', function () {
     let confirm = window.confirm('Are you sure want to delete?');
-    if(confirm == true) {
+    if (confirm == true) {
         localStorage.clear();
     }
     update()

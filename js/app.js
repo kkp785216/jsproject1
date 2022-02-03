@@ -5,20 +5,20 @@ let addBtn = document.getElementById('addBtn');
 addBtn.addEventListener('click', function () {
     let addTitle = document.getElementById('addTitle');
     let addTxt = document.getElementById('addTxt');
-    let title = localStorage.getItem('title');
     let notes = localStorage.getItem('notes');
-    if (title == null && notes == null) {
-        titleObj = [];
+    if (notes == null) {
         notesObj = [];
     }
     else {
-        titleObj = JSON.parse(title);
         notesObj = JSON.parse(notes);
     }
-    titleObj.push(addTitle.value);
-    notesObj.push(addTxt.value);
+    myObj = {
+        title: addTitle.value,
+        notes: addTxt.value
+    }
 
-    localStorage.setItem('title', JSON.stringify(titleObj));
+    notesObj.push(myObj);
+
     localStorage.setItem('notes', JSON.stringify(notesObj));
 
     addTitle.value = "";
@@ -29,14 +29,11 @@ addBtn.addEventListener('click', function () {
 // Function to show notes fron the local Storage
 let notesDiv = document.getElementById('notes');
 function update() {
-    let title = localStorage.getItem('title');
     let notes = localStorage.getItem('notes');
-    if (title == null && notes == null) {
-        titleObj = [];
+    if (notes == null) {
         notesObj = [];
     }
     else {
-        titleObj = JSON.parse(title);
         notesObj = JSON.parse(notes);
     }
 
@@ -45,13 +42,11 @@ function update() {
         html += `<div class="mx-2 my-2 noteCards card" style="width: 18rem;">
         <div class="card-body">
         <h5 class="card-title" style="color: #a2cfa2;">Note ${index + 1}</h5>
-        <h5 class="card-titlee">${titleObj[index]}</h5>
-        <p class="card-text">${element}</p>
+        <h5 class="card-titlee">${element.title}</h5>
+        <p class="card-text">${element.notes}</p>
         <button id="${index}" onclick="deleteNotes(this.id)" class="btn btn-primary">Delete Note</button>
         </div>
         </div>`;
-
-        console.log(titleObj[index])
     });
 
     let noteElm = document.getElementById('notes');
@@ -67,17 +62,13 @@ function update() {
 function deleteNotes(index) {
     let title = localStorage.getItem('title');
     let notes = localStorage.getItem('notes');
-    if (title == null && notes == null) {
-        titleObj = [];
+    if (notes == null) {
         notesObj = [];
     }
     else {
-        titleObj = JSON.parse(title);
         notesObj = JSON.parse(notes);
     }
-    titleObj.splice(index, 1);
     notesObj.splice(index, 1);
-    localStorage.setItem('title', JSON.stringify(titleObj));
     localStorage.setItem('notes', JSON.stringify(notesObj));
     update()
 }

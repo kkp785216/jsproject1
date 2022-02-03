@@ -40,11 +40,12 @@ function update() {
     let html = "";
     notesObj.forEach(function (element, index) {
         html += `<div class="mx-2 my-2 noteCards card" style="width: 18rem;">
-        <div class="card-body">
+        <div class="card-body note-body">
         <h5 class="card-title" style="color: #a2cfa2;">Note ${index + 1}</h5>
         <h5 class="card-titlee">${element.title}</h5>
         <p class="card-text">${element.notes}</p>
-        <button id="${index}" onclick="deleteNotes(this.id)" class="btn btn-primary">Delete Note</button>
+        <button id="edit${index}" onclick="editNotes(${index})" class="btn btn-primary btn-sm">Edit</button>
+        <button id="delete${index}" onclick="deleteNotes(${index})" class="btn btn-primary btn-sm">Delete Note</button>
         </div>
         </div>`;
     });
@@ -82,6 +83,71 @@ deleteAll.addEventListener('click', function () {
     }
     update()
 })
+
+// Function for edit notes
+function editNotes(index) {
+    let addTitle = document.getElementById('addTitle');
+    let addTxt = document.getElementById('addTxt');
+    let addBtn = document.getElementById('addBtn')
+    let updateBtn = document.querySelector('.buttonUpdate');
+    let notes = localStorage.getItem('notes');
+    if (notes == null) {
+        notesObj = [];
+    }
+    else {
+        notesObj = JSON.parse(notes);
+    }
+    addTitle.value = notesObj[index].title;
+    addTitle.focus();
+    addTxt.value = notesObj[index].notes;
+
+    let updateHtml = `<button class="btn btn-success"  id="updateBtn${index}" onclick="updateNote(${index})">Update</button>`;
+    addBtn.style.display = "none";
+    updateBtn.innerHTML= updateHtml;
+}
+
+function updateNote(index) {
+    let addTitle = document.getElementById('addTitle');
+    let addTxt = document.getElementById('addTxt');
+    let addBtn = document.getElementById('addBtn')
+    let updateBtn = document.querySelector('.buttonUpdate')
+    let notes = localStorage.getItem('notes');
+    if (notes == null) {
+        notesObj = [];
+    }
+    else {
+        notesObj = JSON.parse(notes);
+    }
+    notesObj[index].title = addTitle.value;
+    notesObj[index].notes = addTxt.value;
+    let myStr = JSON.stringify(notesObj);
+    localStorage.setItem('notes', myStr)
+
+    updateBtn.innerHTML= '';
+    addBtn.style.display = "block";
+    addTitle.value = ''
+    addTxt.value = ''
+    update()
+}
+
+// Function to search notes
+let searchInput = document.getElementById('searchNotes');
+searchInput.addEventListener('input', 
+function search(){
+    let noteBody = document.querySelectorAll('.noteCards');
+    noteBody.forEach(function (element, index) {
+        let title = element.querySelector('.card-titlee');
+        let note = element.querySelector('.card-text');
+        let titleFilter = title.innerText.includes(searchInput.value)
+        let noteFilter =  note.innerText.includes(searchInput.value);
+        if(titleFilter == true || noteFilter == true) {
+            element.style.display = 'block';
+        }
+        else{
+            element.style.display = 'none';
+        }
+    });
+});
 
 
 /*
